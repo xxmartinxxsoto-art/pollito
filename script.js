@@ -62,7 +62,7 @@ function crearObstaculo() {
       puntos.innerText = score;
       yaSumoPunto = true;
 
-      if (score >= 1) {
+      if (score >= 21) {
         terminarJuego();
       }
     }
