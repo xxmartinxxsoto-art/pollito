@@ -62,7 +62,7 @@ function crearObstaculo() {
       puntos.innerText = score;
       yaSumoPunto = true;
 
-      if (score >= 21) {
+      if (score >= 1) {
         terminarJuego();
       }
     }
@@ -117,9 +117,9 @@ function terminarJuego() {
         <img src="img/snoopy flor amarilla.png" class="imagen-snoopy-flores" alt="Snoopy con flores amarillas" />
       </div>
       <div class="texto-victoria">
-        <h2>Hecho con cariño para ti 🐾</h2>
-        <h1>¡Feliz 21 de Septiembre! ❤️</h1>
-        <p>- Mar</p>
+        <h2>Hecho con cada break jsjkd</h2>
+        <h1>¡Feliz día! ^^</h1>
+        <p>~Mar ♥</p>
       </div>
     </div>
   `;
