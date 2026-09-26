@@ -42,15 +42,16 @@ function crearObstaculo() {
 
     let snoopyRect = snoopy.getBoundingClientRect();
     let obsRect = obs.getBoundingClientRect();
-    let snoopyBottom = parseInt(window.getComputedStyle(snoopy).bottom);
 
-    if (
-      obsRect.left < snoopyRect.right &&
-      obsRect.right > snoopyRect.left &&
-      obsRect.top < snoopyRect.bottom &&
-      obsRect.bottom > snoopyRect.top &&
-      snoopyBottom <= 75
-    ) {
+    // Mayor tolerancia (margen libre) para descartar bordes transparentes
+    let toleranciaX = 28; // Quita el espacio invisible a los lados de la piedra
+    let toleranciaY = 25; // Quita el espacio invisible arriba de la piedra
+
+    let chocandoHorizontal = (obsRect.left + toleranciaX) < snoopyRect.right && (obsRect.right - toleranciaX) > snoopyRect.left;
+    let chocandoVertical = (obsRect.top + toleranciaY) < snoopyRect.bottom && obsRect.bottom > snoopyRect.top;
+
+    if (chocandoHorizontal && chocandoVertical) {
+      reproducirBonk();
       mostrarMensajePerdida("¡Perdiste! :c Puntaje: " + score);
       reiniciarJuego();
       clearInterval(colisionCheck);
@@ -73,14 +74,21 @@ function crearObstaculo() {
   }, 3000);
 }
 
-function reiniciarJuego() {
-  // SUENA EL BONK/PIEDRA AL CHOACAR
+function reproducirBonk() {
   const audioPiedra = document.getElementById('audioPiedra');
   if (audioPiedra) {
     audioPiedra.currentTime = 0;
-    audioPiedra.play().catch(() => {});
+    audioPiedra.volume = 1.0;
+    let playPromise = audioPiedra.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(error => {
+        console.log("Error al reproducir audio del choque:", error);
+      });
+    }
   }
+}
 
+function reiniciarJuego() {
   gameOver = true;
   document.querySelectorAll(".obstaculo").forEach(obs => obs.remove());
   score = 0;
@@ -109,9 +117,9 @@ function terminarJuego() {
         <img src="img/snoopy flor amarilla.png" class="imagen-snoopy-flores" alt="Snoopy con flores amarillas" />
       </div>
       <div class="texto-victoria">
-        <h2>Hecho con cada break jskds</h2>
-        <h1>!Feliz dia! ^^ </h1>
-        <p>~Mar ♥</p>
+        <h2>Hecho con cariño para ti 🐾</h2>
+        <h1>¡Feliz 21 de Septiembre! ❤️</h1>
+        <p>- Mar</p>
       </div>
     </div>
   `;
@@ -127,6 +135,11 @@ const btnJugar = document.getElementById('btnJugar');
 btnJugar.addEventListener('click', () => {
   btnJugar.style.display = 'none';
   crearObstaculoInterval = setInterval(crearObstaculo, 2500);
+
+  const audioPiedra = document.getElementById('audioPiedra');
+  if (audioPiedra) {
+    audioPiedra.load();
+  }
 
   if (musica && musica.paused) {
     musica.volume = 0.5;
